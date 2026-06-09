@@ -1,34 +1,111 @@
 const slides = document.querySelectorAll('.slide');
 let currentSlide = 0;
+let slideTimer;
 
 function showSlide(index) {
-  slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+  if (!slides.length) return;
+
+  currentSlide = (index + slides.length) % slides.length;
+  slides.forEach((slide, i) => {
+    slide.classList.toggle('active', i === currentSlide);
+  });
 }
 
-document.getElementById('arrowLeft').addEventListener('click', () => {
-  currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-  showSlide(currentSlide);
-});
+function nextSlide() {
+  showSlide(currentSlide + 1);
+}
 
-document.getElementById('arrowRight').addEventListener('click', () => {
-  currentSlide = (currentSlide + 1) % slides.length;
-  showSlide(currentSlide);
-});
+function previousSlide() {
+  showSlide(currentSlide - 1);
+}
+
+function startSlideTimer() {
+  clearInterval(slideTimer);
+  slideTimer = setInterval(nextSlide, 5000);
+}
+
+const arrowLeft = document.getElementById('arrowLeft');
+const arrowRight = document.getElementById('arrowRight');
+
+if (arrowLeft && arrowRight && slides.length) {
+  showSlide(0);
+  startSlideTimer();
+
+  arrowLeft.addEventListener('click', () => {
+    previousSlide();
+    startSlideTimer();
+  });
+
+  arrowRight.addEventListener('click', () => {
+    nextSlide();
+    startSlideTimer();
+  });
+}
 
 function toggleModal(modalId, show) {
-  document.getElementById(modalId).style.display = show ? 'flex' : 'none';
+  const modal = document.getElementById(modalId);
+
+  if (modal) {
+    modal.style.display = show ? 'flex' : 'none';
+  }
 }
 
-loginBtn.onclick = () => toggleModal('loginModal', true);
-closeLogin.onclick = () => toggleModal('loginModal', false);
+const loginBtn = document.getElementById('loginBtn');
+const closeLogin = document.getElementById('closeLogin');
+const registerBtn = document.getElementById('registerBtn');
+const closeRegister = document.getElementById('closeRegister');
+const filterBtn = document.getElementById('filterBtn');
+const closeFilter = document.getElementById('closeFilter');
+const applyFilters = document.getElementById('applyFilters');
+const searchBtn = document.getElementById('searchBtn');
+const searchInput = document.getElementById('searchInput');
+const modalGenre = document.getElementById('modalGenre');
+const modalYear = document.getElementById('modalYear');
+const modalType = document.getElementById('modalType');
+const modalDub = document.getElementById('modalDub');
 
-registerBtn.onclick = () => toggleModal('registerModal', true);
-closeRegister.onclick = () => toggleModal('registerModal', false);
+if (loginBtn) {
+  loginBtn.addEventListener('click', () => toggleModal('loginModal', true));
+}
 
-filterBtn.onclick = () => toggleModal('filterModal', true);
-closeFilter.onclick = () => toggleModal('filterModal', false);
+if (closeLogin) {
+  closeLogin.addEventListener('click', () => toggleModal('loginModal', false));
+}
 
-applyFilters.onclick = () => {
+if (registerBtn) {
+  registerBtn.addEventListener('click', () => toggleModal('registerModal', true));
+}
+
+if (closeRegister) {
+  closeRegister.addEventListener('click', () => toggleModal('registerModal', false));
+}
+
+if (filterBtn) {
+  filterBtn.addEventListener('click', () => toggleModal('filterModal', true));
+}
+
+if (closeFilter) {
+  closeFilter.addEventListener('click', () => toggleModal('filterModal', false));
+}
+
+document.querySelectorAll('.modal').forEach(modal => {
+  modal.addEventListener('click', event => {
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+});
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') {
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.style.display = 'none';
+    });
+  }
+});
+
+if (applyFilters) {
+  applyFilters.addEventListener('click', () => {
   const genre = modalGenre.value;
   const year = modalYear.value;
   const type = modalType.value;
@@ -44,11 +121,14 @@ applyFilters.onclick = () => {
   });
 
   toggleModal('filterModal', false);
-};
+  });
+}
 
-searchBtn.onclick = () => {
+if (searchBtn && searchInput) {
+  searchBtn.addEventListener('click', () => {
   const q = searchInput.value.toLowerCase();
   document.querySelectorAll('.card').forEach(card => {
     card.style.display = card.textContent.toLowerCase().includes(q) ? 'block' : 'none';
   });
-};
+  });
+}
