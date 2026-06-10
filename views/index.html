@@ -25,9 +25,8 @@
     </nav>
 
     <div class="header-actions">
-      <button class="account-btn" id="loginBtn">Вход</button>
-      <button class="register-btn" id="registerBtn">Регистрация</button>
-      <button class="account-btn filter-btn" id="filterBtn">Фильтры ▼</button>
+      <a class="account-btn" href="login.html">Вход</a>
+      <a class="register-btn" href="registr.html">Регистрация</a>
     </div>
   </div>
 </header>
@@ -160,29 +159,9 @@
 <footer>© 2025 Anime Stream</footer>
 
 
-<div class="modal" id="loginModal">
-  <div class="modal-content">
-    <h2>Вход</h2>
-    <input type="text" placeholder="Логин">
-    <input type="password" placeholder="Пароль">
-    <button class="submit-btn">Войти</button>
-    <button class="close-btn" id="closeLogin">Закрыть</button>
-  </div>
-</div>
-
-<div class="modal" id="registerModal">
-  <div class="modal-content">
-    <h2>Регистрация</h2>
-    <input type="text" placeholder="Логин">
-    <input type="email" placeholder="Email">
-    <input type="password" placeholder="Пароль">
-    <button class="submit-btn">Зарегистрироваться</button>
-    <button class="close-btn" id="closeRegister">Закрыть</button>
-  </div>
-</div>
-
-<div class="modal" id="filterModal">
-  <div class="modal-content">
+<aside class="filter-sidebar" id="filterPanel">
+  <div class="filter-tab">Фильтры</div>
+  <div class="filter-content">
     <h2>Фильтры поиска</h2>
     <select id="modalGenre">
       <option value="">Жанр</option>
@@ -211,9 +190,9 @@
       <option>Субтитры</option>
     </select>
     <button class="submit-btn" id="applyFilters">Применить</button>
-    <button class="close-btn" id="closeFilter">Закрыть</button>
+    <button class="close-btn" id="clearFilters">Сбросить</button>
   </div>
-</div>
+</aside>
 
 
 <script src="../public/js/main.js"></script>
