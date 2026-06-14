@@ -18,7 +18,21 @@ h1 { color: #ff005d; }
 .genres { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
 .genre { background: rgba(255,0,93,0.3); padding: 5px 10px; border-radius: 6px; font-size: 14px; }
 .rating { font-weight: bold; margin-top: 10px; }
-iframe { width: 100%; height: 480px; border-radius: 12px; margin-top: 20px; }
+iframe,
+video { width: 100%; height: 480px; border: 0; border-radius: 12px; margin-top: 20px; background: #111; }
+.media-switch { display: flex; gap: 10px; margin-top: 24px; }
+.media-switch button {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  cursor: pointer;
+}
+.media-switch button.is-active {
+  background: #ff005d;
+}
+.media-panel[hidden] { display: none; }
 ul { list-style: none; padding: 0; }
 ul li { background: rgba(27,27,31,0.85); padding: 10px 12px; border-radius: 8px; margin-bottom: 6px; }
 </style>
@@ -40,8 +54,21 @@ ul li { background: rgba(27,27,31,0.85); padding: 10px 12px; border-radius: 8px;
 
 <div class="rating">Рейтинг: 8.5/10</div>
 
-<h2>Трейлер</h2>
-<iframe src="https://www.youtube.com/embed/kXFBM9sT3G0" frameborder="0" allowfullscreen></iframe>
+<h2>Трейлер / плеер</h2>
+<div class="media-switch" aria-label="Выбор видео">
+  <button class="is-active" type="button" data-media-target="trailer-panel">Трейлер</button>
+  <button type="button" data-media-target="player-panel">Плеер</button>
+</div>
+
+<div class="media-panel" id="trailer-panel">
+  <iframe src="https://www.youtube.com/embed/kXFBM9sT3G0" title="Трейлер Человек бензопила" allowfullscreen></iframe>
+</div>
+
+<div class="media-panel" id="player-panel" hidden>
+  <video id="chainsaw-player" controls preload="metadata" playsinline data-src="http://localhost:8080/video/3">
+    Ваш браузер не поддерживает встроенный видеоплеер.
+  </video>
+</div>
 
 <h2>Список серий</h2>
 <ul>
@@ -58,6 +85,8 @@ ul li { background: rgba(27,27,31,0.85); padding: 10px 12px; border-radius: 8px;
 <li>11 серия: Специальная операция (Mission Start)</li>
 <li>12 серия: Катана против Бензопилы (Katana vs. Chainsaw)</li>
 </ul>
+
+<script src="../public/js/anime_ch_benzopila.js"></script>
 
 </body>
 </html>
