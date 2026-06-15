@@ -549,7 +549,18 @@ footer {
 
 .profile-stat {
   padding: 22px;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
   text-align: center;
+  transition: 0.3s;
+}
+
+.profile-stat:hover,
+.profile-stat.active {
+  transform: translateY(-4px);
+  border-color: rgba(255,0,93,0.45);
+  box-shadow: 0 0 16px rgba(255,0,93,0.22);
 }
 
 .profile-stat span {
@@ -580,6 +591,10 @@ footer {
   gap: 18px;
 }
 
+.profile-watch-info {
+  min-width: 0;
+}
+
 .profile-watch img {
   width: 92px;
   height: 128px;
@@ -598,22 +613,60 @@ footer {
   color: #aaa;
 }
 
-.progress-bar {
-  height: 8px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.1);
+.episode-progress {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 4px;
+  width: 100%;
+  margin: 12px 0;
 }
 
-.progress-bar span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
+.episode-segment {
+  height: 10px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.episode-segment.watched {
+  background: var(--accent-primary);
+  box-shadow: 0 0 10px rgba(255,0,93,0.45);
+}
+
+.episode-segment.current {
+  transform: scaleY(1.45);
+  background: var(--accent-secondary);
+}
+
+.episode-controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.episode-btn {
+  padding: 9px 12px;
+  border: none;
+  border-radius: 8px;
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.episode-btn:hover {
+  background: #444;
+}
+
+.episode-btn.primary {
   background: var(--accent-primary);
 }
 
-.progress-66 {
-  width: 66%;
+.episode-btn.primary:hover {
+  background: var(--accent-hover);
 }
 
 .profile-favorites {

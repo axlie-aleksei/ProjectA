@@ -96,3 +96,62 @@ if (searchBtn && searchInput) {
     });
   });
 }
+
+const profileStats = document.querySelectorAll('.profile-stat');
+
+profileStats.forEach(stat => {
+  stat.addEventListener('click', () => {
+    profileStats.forEach(item => item.classList.remove('active'));
+    stat.classList.add('active');
+  });
+});
+
+const profileWatch = document.querySelector('.profile-watch');
+
+if (profileWatch) {
+  const progress = profileWatch.querySelector('.episode-progress');
+  const label = profileWatch.querySelector('.episode-label');
+  const prevBtn = document.getElementById('episodePrev');
+  const nextBtn = document.getElementById('episodeNext');
+  const totalEpisodes = Number(profileWatch.dataset.totalEpisodes || 12);
+  let currentEpisode = Number(profileWatch.dataset.currentEpisode || 1);
+
+  function updateEpisodes() {
+    label.textContent = `Серия ${currentEpisode} из ${totalEpisodes}`;
+
+    progress.querySelectorAll('.episode-segment').forEach(segment => {
+      const episode = Number(segment.dataset.episode);
+      segment.classList.toggle('watched', episode <= currentEpisode);
+      segment.classList.toggle('current', episode === currentEpisode);
+    });
+  }
+
+  for (let episode = 1; episode <= totalEpisodes; episode += 1) {
+    const segment = document.createElement('button');
+    segment.type = 'button';
+    segment.className = 'episode-segment';
+    segment.dataset.episode = episode;
+    segment.title = `Серия ${episode}`;
+    segment.addEventListener('click', () => {
+      currentEpisode = episode;
+      updateEpisodes();
+    });
+    progress.appendChild(segment);
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      currentEpisode = Math.max(1, currentEpisode - 1);
+      updateEpisodes();
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      currentEpisode = Math.min(totalEpisodes, currentEpisode + 1);
+      updateEpisodes();
+    });
+  }
+
+  updateEpisodes();
+}
