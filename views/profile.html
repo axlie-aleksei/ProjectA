@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Профиль | Anime Stream</title>
+  <link rel="stylesheet" href="../public/css/style.css">
+</head>
+<body class="profile-page">
+
+<header>
+  <h1>Anime Stream</h1>
+  <div class="header-center">
+    <nav>
+      <a href="index.html">Главная</a>
+      <a href="#">Популярное</a>
+      <a href="#">Онгоинги</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="account-btn" href="login.html">Вход</a>
+      <a class="register-btn" href="registr.html">Регистрация</a>
+    </div>
+  </div>
+</header>
+
+<main class="profile-layout">
+  <section class="profile-hero">
+    <div class="profile-avatar">AS</div>
+    <div>
+      <p class="profile-label">Профиль пользователя</p>
+      <h2>AnimeFan</h2>
+      <p class="profile-meta">Смотрит аниме с 2025 года</p>
+    </div>
+  </section>
+
+  <section class="profile-stats">
+    <button class="profile-stat active" type="button">
+      <span>24</span>
+      <p>Просмотрено</p>
+    </button>
+    <button class="profile-stat" type="button">
+      <span>7</span>
+      <p>В процессе</p>
+    </button>
+    <button class="profile-stat" type="button">
+      <span>12</span>
+      <p>В избранном</p>
+    </button>
+  </section>
+
+  <section class="profile-section">
+    <h3>Продолжить просмотр</h3>
+    <div class="profile-watch" data-current-episode="8" data-total-episodes="12">
+      <img src="https://cdn.myanimelist.net/images/anime/1806/126216l.jpg" alt="Человек бензопила">
+      <div class="profile-watch-info">
+        <h4>Человек бензопила</h4>
+        <p class="episode-label">Серия 8 из 12</p>
+        <div class="episode-progress" aria-label="Прогресс по сериям"></div>
+        <div class="episode-controls">
+          <button type="button" class="episode-btn" id="episodePrev">Назад</button>
+          <button type="button" class="episode-btn primary" id="episodeNext">Следующая серия</button>
+        </div>
+      </div>
+      <a class="submit-btn" href="anime_ch_benzopila.html">Смотреть</a>
+    </div>
+  </section>
+
+  <section class="profile-section">
+    <h3>Избранное</h3>
+    <div class="profile-favorites">
+      <a href="anime_attack_titans.html">
+        <img src="https://cdn.myanimelist.net/images/anime/10/47347l.jpg" alt="Атака Титанов">
+        <span>Атака Титанов</span>
+      </a>
+      <a href="solo_leveling.html">
+        <img src="https://cdn.myanimelist.net/images/anime/1801/142390l.jpg" alt="Поднятие уровня в одиночку">
+        <span>Поднятие уровня в одиночку</span>
+      </a>
+      <a href="anime_kaiju8.html">
+        <img src="https://cdn.myanimelist.net/images/anime/1370/140362l.jpg" alt="Кайдзю №8">
+        <span>Кайдзю №8</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<script src="../public/js/main.js"></script>
+</body>
+</html>
