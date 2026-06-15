@@ -1,23 +1,20 @@
- require("dotenv").config({ path: __dirname + "/../.env", quiet: true });
+require("dotenv").config({ path: __dirname + "/../.env", quiet: true });
 
 const path = require("path");
 const express = require('express');
 const session = require('express-session');
-
-const cors = require("cors")
-
+const cors = require("cors");
 const helmet = require("helmet");
-const rateLimit = require("express-rate-limit")
-const loginLimiter = rateLimit({
-  windowMs: 10 * 60 * 1000,
-  max: 5,
-  message: { error: "too many login attempts" }
-})
+const rateLimit = require("express-rate-limit");
 
 const authRoutes = require('./routes/auth');
 const staticFiles = require("./middleware/staticFiles");
 
 const app = express();
+
+// 1. ПАРСЕРЫ И СЕКЬЮРИТИ (Всегда идут первыми)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
 app.use(helmet.noSniff({
   contentSecurityPolicy: {
@@ -34,19 +31,15 @@ app.use(helmet.noSniff({
     },
   },
 }));
+
 app.use("/api", rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100
-}))
+}));
 
-app.use(express.urlencoded({ extended: true, limit: "10kb" }))
-
-// -----------------
-// Настройка сессий
-// -----------------
 app.use(session({
   name: "rent_session",
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || "default_secret",
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -58,21 +51,33 @@ app.use(session({
 }));
 
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: true,
   credentials: true
-}))
+}));
 
+// Логгер для дебага (пусть стоит повыше роутов, чтобы мы видели ВСЕ запросы)
+app.use((req, res, next) => {
+  console.log(`[Запрос отправлен]: Метод: ${req.method} | Путь: ${req.url}`);
+  next();
+});
+
+// 2. НАСТОЯЩИЕ API РОУТЫ (Должны быть ВЫШЕ статических файлов!)
+console.log("=== ЛОГ СТАРТА: Начинаем подключение роутов ===");
+app.use("/auth", authRoutes);
+console.log("2. Роуты app.use('/auth', authRoutes) успешно зарегистрированы!");
+console.log("=== КОНЕЦ БЛОКА ПРОВЕРКИ РОУТОВ ===");
+
+// 3. СТАТИКА И ФАЙЛЫ (Идут ниже роутов, чтобы не перехватывать API)
 app.use(express.static(path.join(__dirname, "..", "public")));
+staticFiles(app); // Тот самый "жадный" мидлвар теперь в самом низу!
 
-staticFiles(app);
-
+// 4. ОБРАБОТКА ОШИБОК (Всегда в самом конце)
 app.use((err, req, res, next) => {
-  console.error(err)
-  res.status(500).json({ error: "server error" })
-})
+  console.error(err);
+  res.status(500).json({ error: "server error" });
+});
 
-const PORT = process.env.PORT || 3000;
-
+const PORT = process.env.PORT || 3001;
 console.log("PORT from env:", process.env.PORT);
 
 app.listen(PORT, () => {

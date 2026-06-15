@@ -120,8 +120,20 @@ nav a:hover {
   cursor: pointer;
   transition: 0.3s;
 }
-
+.logout-btn,
+.profile-btn,
+.register-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
 .account-btn {
+  background: var(--accent-primary);
+}
+.logout-btn {
   background: var(--accent-primary);
 }
 

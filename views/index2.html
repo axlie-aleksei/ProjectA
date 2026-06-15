@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Anime Stream</title>
+
+
+<link rel="stylesheet" href="../public/css/style.css">
+</head>
+<body>
+
+<header>
+  <h1>Anime Stream</h1>
+  <div class="header-center">
+    <div class="header-search">
+      <input type="text" placeholder="Поиск аниме..." id="searchInput">
+      <button id="searchBtn">Поиск</button>
+    </div>
+
+    <nav>
+      <a href="anime site 1.html">Главная</a>
+      <a href="#">Популярное</a>
+      <a href="#">Онгоинги</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="profile-btn" href="profile.html">Профиль</a>
+      <a class="logout-btn" href="login.html">Выход</a>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="slider-arrow" id="arrowLeft">❮</div>
+  <div class="slider-arrow" id="arrowRight">❯</div>
+
+  <div class="slide active">
+    <img src="https://cdn.myanimelist.net/images/anime/10/47347l.jpg" alt="Атака Титанов">
+    <div class="hero-gradient"></div>
+    <div class="hero-content">
+      <h2 class="hero-title">Атака Титанов</h2>
+      <p class="hero-description">Фантастика • Драма • Экшен • Фэнтези</p>
+      <div class="hero-actions">
+        <a href="anime_attack_titans.html" class="btn primary">Смотреть</a>
+        <a href="anime_attack_titans.html" class="btn secondary">Подробнее</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <img src="https://cdn.myanimelist.net/images/anime/1806/126216l.jpg" alt="Человек-бензопила">
+    <div class="hero-gradient"></div>
+    <div class="hero-content">
+      <h2 class="hero-title">Человек-бензопила</h2>
+      <p class="hero-description">Экшен • Триллер • Демоны</p>
+      <div class="hero-actions">
+        <a href="anime_ch_benzopila.html" class="btn primary">Смотреть</a>
+        <a href="anime_ch_benzopila.html" class="btn secondary">Подробнее</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <img src="https://cdn.myanimelist.net/images/anime/1801/142390l.jpg" alt="Поднятие уровня в одиночку">
+    <div class="hero-gradient"></div>
+    <div class="hero-content">
+      <h2 class="hero-title">Поднятие уровня в одиночку</h2>
+      <p class="hero-description">Экшен • Фэнтези • Магия</p>
+      <div class="hero-actions">
+        <a href="solo_leveling.html" class="btn primary">Смотреть</a>
+        <a href="solo_leveling.html" class="btn secondary">Подробнее</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <img src="https://cdn.myanimelist.net/images/anime/1370/140362l.jpg" alt="Кайдзю №8">
+    <div class="hero-gradient"></div>
+    <div class="hero-content">
+      <h2 class="hero-title">Кайдзю №8</h2>
+      <p class="hero-description">Экшен • Фэнтези • Магия</p>
+      <div class="hero-actions">
+        <a href="anime_kaiju8.html" class="btn primary">Смотреть</a>
+        <a href="anime_kaiju8.html" class="btn secondary">Подробнее</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3 class="title">Продолжить просмотр</h3>
+  <div class="row" id="animeRow">
+
+    <a href="anime_ch_benzopila.html" class="card" data-genre="Экшен" data-year="2025" data-type="Сериал" data-dub="Русский">
+      <img src="https://cdn.myanimelist.net/images/anime/1806/126216l.jpg" alt="Человек бензопила">
+      <div class="card-info">Человек бензопила</div>
+      <button>Продолжить</button>
+    </a>
+
+    <a href="anime_attack_titans.html" class="card" data-genre="Драма" data-year="2023" data-type="Сериал" data-dub="Русский">
+      <img src="https://cdn.myanimelist.net/images/anime/10/47347l.jpg" alt="Атака Титанов">
+      <div class="card-info">Атака Титанов</div>
+      <button>Продолжить</button>
+    </a>
+
+    <a href="anime_kaiju8.html" class="card" data-genre="Фэнтези" data-year="2024" data-type="Сериал" data-dub="Субтитры">
+      <img src="https://cdn.myanimelist.net/images/anime/1370/140362l.jpg" alt="Кайдзю №8">
+      <div class="card-info">Кайдзю №8</div>
+      <button>Продолжить</button>
+    </a>
+
+    <a href="solo_leveling.html" class="card" data-genre="Экшен" data-year="2022" data-type="Сериал" data-dub="Русский">
+      <img src="https://cdn.myanimelist.net/images/anime/1801/142390l.jpg" alt="Поднятие уровня в одиночку">
+      <div class="card-info">Поднятие уровня в одиночку</div>
+      <button>Продолжить</button>
+    </a>
+
+  </div>
+</div>
+
+<div class="section">
+  <h3 class="title">Сейчас смотрят</h3>
+  <div class="row" id="animeRow">
+
+    <a href="anime_ch_benzopila.html" class="card" data-genre="Экшен" data-year="2025" data-type="Сериал" data-dub="Русский">
+      <img src="https://cdn.myanimelist.net/images/anime/1806/126216l.jpg" alt="Человек бензопила">
+      <div class="card-info">Человек бензопила</div>
+      <button>Смотреть</button>
+    </a>
+
+    <a href="my_hero.html" class="card" data-genre="Экшен" data-year="2025" data-type="Сериал" data-dub="Русский">
+      <img src="https://cdn.myanimelist.net/images/anime/10/78745l.jpg" alt="Моя геройская академия">
+      <div class="card-info">Моя геройская академия</div>
+      <button>Смотреть</button>
+    </a>
+
+    <a href="anime_attack_titans.html" class="card" data-genre="Драма" data-year="2023" data-type="Сериал" data-dub="Русский">
+      <img src="https://cdn.myanimelist.net/images/anime/10/47347l.jpg" alt="Атака Титанов">
+      <div class="card-info">Атака Титанов</div>
+      <button>Смотреть</button>
+    </a>
+
+    <a href="anime_kaiju8.html" class="card" data-genre="Фэнтези" data-year="2024" data-type="Сериал" data-dub="Субтитры">
+      <img src="https://cdn.myanimelist.net/images/anime/1370/140362l.jpg" alt="Кайдзю №8">
+      <div class="card-info">Кайдзю №8</div>
+      <button>Смотреть</button>
+    </a>
+
+    <a href="solo_leveling.html" class="card" data-genre="Экшен" data-year="2022" data-type="Сериал" data-dub="Русский">
+      <img src="https://cdn.myanimelist.net/images/anime/1801/142390l.jpg" alt="Поднятие уровня в одиночку">
+      <div class="card-info">Поднятие уровня в одиночку</div>
+      <button>Смотреть</button>
+    </a>
+
+  </div>
+</div>
+
+<footer>© 2025 Anime Stream</footer>
+
+
+<aside class="filter-sidebar" id="filterPanel">
+  <div class="filter-tab">Фильтры</div>
+  <div class="filter-content">
+    <h2>Фильтры поиска</h2>
+    <select id="modalGenre">
+      <option value="">Жанр</option>
+      <option>Экшен</option>
+      <option>Драма</option>
+      <option>Фэнтези</option>
+      <option>Комедия</option>
+      <option>Романтика</option>
+    </select>
+    <select id="modalYear">
+      <option value="">Год</option>
+      <option>2025</option>
+      <option>2024</option>
+      <option>2023</option>
+      <option>2022</option>
+    </select>
+    <select id="modalType">
+      <option value="">Тип</option>
+      <option>Сериал</option>
+      <option>Фильм</option>
+      <option>OVA</option>
+    </select>
+    <select id="modalDub">
+      <option value="">Дубляж</option>
+      <option>Русский</option>
+      <option>Субтитры</option>
+    </select>
+    <button class="submit-btn" id="applyFilters">Применить</button>
+    <button class="close-btn" id="clearFilters">Сбросить</button>
+  </div>
+</aside>
+
+
+<script src="../public/js/main.js"></script>
+
+</body>
+</html>
+
+
