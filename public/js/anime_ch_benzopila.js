@@ -1,41 +1,37 @@
 (function () {
   const mediaButtons = document.querySelectorAll('[data-media-target]');
   const mediaPanels = document.querySelectorAll('.media-panel');
-  const chainsawPlayer = document.getElementById('chainsaw-player');
-  let playerAudioPrepared = false;
 
-  function enablePlayerAudio() {
-    if (!chainsawPlayer) return;
+  function prepareVideo(video) {
+    if (!video) return;
 
-    chainsawPlayer.defaultMuted = false;
-    chainsawPlayer.muted = false;
+    video.defaultMuted = false;
+    video.muted = false;
 
-    if (!playerAudioPrepared || chainsawPlayer.volume === 0) {
-      chainsawPlayer.volume = 1;
-      playerAudioPrepared = true;
+    if (video.volume === 0) {
+      video.volume = 1;
     }
   }
 
-  function loadPlayer() {
-    if (!chainsawPlayer || !chainsawPlayer.dataset.src) return;
+  function loadPanelVideos(panel) {
+    panel.querySelectorAll('video[data-src]').forEach(video => {
+      prepareVideo(video);
 
-    enablePlayerAudio();
-
-    if (chainsawPlayer.getAttribute('src') !== chainsawPlayer.dataset.src) {
-      chainsawPlayer.src = chainsawPlayer.dataset.src;
-      chainsawPlayer.load();
-    }
+      if (video.getAttribute('src') !== video.dataset.src) {
+        video.src = video.dataset.src;
+        video.load();
+      }
+    });
   }
 
-  function pausePlayer() {
-    if (chainsawPlayer) {
-      chainsawPlayer.pause();
-    }
+  function pauseVideos() {
+    document.querySelectorAll('video').forEach(video => video.pause());
   }
 
   mediaButtons.forEach((button) => {
     button.addEventListener('click', () => {
       const targetId = button.dataset.mediaTarget;
+      const targetPanel = document.getElementById(targetId);
 
       mediaButtons.forEach((item) => {
         item.classList.toggle('is-active', item === button);
@@ -45,16 +41,15 @@
         panel.hidden = panel.id !== targetId;
       });
 
-      if (targetId === 'player-panel') {
-        loadPlayer();
-        return;
-      }
+      pauseVideos();
 
-      pausePlayer();
+      if (targetPanel) {
+        loadPanelVideos(targetPanel);
+      }
     });
   });
 
-  if (chainsawPlayer) {
-    chainsawPlayer.addEventListener('play', enablePlayerAudio);
-  }
+  document.querySelectorAll('video').forEach(video => {
+    video.addEventListener('play', () => prepareVideo(video));
+  });
 })();

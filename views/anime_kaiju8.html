@@ -1,64 +1,77 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Кайдзю №8</title>
-<style>
-body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: #000;
-  color: #eee;
-  padding: 20px;
-}
-a { color: #ff005d; text-decoration: none; }
-a:hover { text-decoration: underline; }
-h1 { color: #ff005d; }
-.genres { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
-.genre { background: rgba(255,0,93,0.3); padding: 5px 10px; border-radius: 6px; font-size: 14px; }
-.rating { font-weight: bold; margin-top: 10px; }
-iframe { width: 100%; height: 480px; border-radius: 12px; margin-top: 20px; }
-ul { list-style: none; padding: 0; }
-ul li { background: rgba(27,27,31,0.85); padding: 10px 12px; border-radius: 8px; margin-bottom: 6px; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кайдзю №8</title>
+  <link rel="stylesheet" href="../public/css/style.css">
 </head>
-<body>
+<body class="anime-detail-page">
 
-<a href="index.html">&larr; Назад к списку</a>
+<main class="anime-detail">
+  <a class="back-link" href="index.html">&larr; Назад к списку</a>
 
-<h1>Кайдзю №8</h1>
-<img src="https://avatars.mds.yandex.net/get-kinopoisk-image/4486362/673b3faa-3110-45bb-9d1c-9c1cb6daf807/600x900" alt="Кайдзю №8" style="width:300px; float:left; margin-right:20px; border-radius:12px;">
-<p>Элитное военное подразделение Корпус обороны защищает мирных жителей от кайдзю, которые уже много лет появляются по всей Японии. Останки монстров убирают профессиональные уборщики, один из которых — Кафка Хибино. Парень недоволен своей работой — ещё подростком он хотел вступить в Корпус обороны, но все его попытки не увенчались успехом. Однажды у него появляется возможность осуществить свою мечту, когда в его тело проникает паразит, и Кафка получает способность превращаться в кайдзю.</p>
+  <section class="anime-detail-hero">
+    <img class="anime-detail-poster" src="https://cdn.myanimelist.net/images/anime/1370/140362l.jpg" alt="Кайдзю №8">
 
-<div class="genres">
-  <div class="genre">Приключения</div>
-  <div class="genre">Боевик</div>
-  <div class="genre">Фэнтези</div>
-  <div class="genre">Ужасы</div>
-  <div class="genre">Сёнэн</div>
-</div>
+    <div class="anime-detail-info">
+      <p class="profile-label">Сериал</p>
+      <h1>Кайдзю №8</h1>
+      <p>
+        Кафка Хибино мечтал попасть в Силы обороны, но оказался уборщиком останков кайдзю.
+        После странного заражения он получает способность превращаться в монстра и решает
+        использовать эту силу, чтобы наконец выполнить обещание детства.
+      </p>
 
-<div class="rating">Рейтинг: 8.7/10</div>
+      <div class="genres">
+        <div class="genre">Экшен</div>
+        <div class="genre">Фантастика</div>
+        <div class="genre">Кайдзю</div>
+        <div class="genre">Сёнэн</div>
+      </div>
 
-<h2>Трейлер</h2>
-<iframe src="https://www.youtube.com/embed/example_trailer" frameborder="0" allowfullscreen></iframe>
+      <div class="rating">Рейтинг: 8.7/10</div>
+    </div>
+  </section>
 
-<h2>Список серий</h2>
-<ul>
-  <li>Серия 1: «Человек, который стал кайдзю» </li>
-  <li>Серия 2: «Кайдзю, который побеждает кайдзю»</li>
-  <li>Серия 3: «Матч-реванш»</li>
-  <li>Серия 4: «Упорство 9.8»</li>
-  <li>Серия 5:«Вступление в строй!» </li>
-  <li>Серия 6:«Операция нейтрализации в Сагамихаре на рассвете»</li>
-  <li>Серия 7:Кайдзю № 8»</li>
-  <li>Серия 8:«Добро пожаловать в Силы обороны» </li>
-  <li>Серия 9:«Рейд на базу Татикава»</li>
-  <li>Серия 10:«Раскрытие тайны»</li>
-  <li>Серия 11:«Кайдзю № 8 захвачен»</li>
-  <li>Серия 12:«Кафу Хибино»</li>
-</ul>
+  <section class="anime-detail-section">
+    <h2>Трейлер / плеер</h2>
+    <div class="media-switch" aria-label="Выбор видео">
+      <button class="is-active" type="button" data-media-target="trailer-panel">Трейлер</button>
+      <button type="button" data-media-target="player-panel">Плеер</button>
+    </div>
+
+    <div class="media-panel" id="trailer-panel">
+      <iframe src="https://www.youtube.com/embed/JwF7bhvnCxI" title="Трейлер Кайдзю №8" allowfullscreen></iframe>
+    </div>
+
+    <div class="media-panel" id="player-panel" hidden>
+      <video controls preload="metadata" playsinline data-src="http://localhost:8080/video/2">
+        Ваш браузер не поддерживает встроенный видеоплеер.
+      </video>
+    </div>
+  </section>
+
+  <section class="anime-detail-section">
+    <h2>Список серий</h2>
+    <ul class="episode-list">
+      <li>Серия 1: Человек, который стал кайдзю</li>
+      <li>Серия 2: Кайдзю, который побеждает кайдзю</li>
+      <li>Серия 3: Матч-реванш</li>
+      <li>Серия 4: Упорство 9.8</li>
+      <li>Серия 5: Вступление в строй</li>
+      <li>Серия 6: Операция нейтрализации</li>
+      <li>Серия 7: Кайдзю №8</li>
+      <li>Серия 8: Добро пожаловать в Силы обороны</li>
+      <li>Серия 9: Рейд на базу Татикава</li>
+      <li>Серия 10: Раскрытие тайны</li>
+      <li>Серия 11: Кайдзю №8 захвачен</li>
+      <li>Серия 12: Кафка Хибино</li>
+    </ul>
+  </section>
+</main>
+
+<script src="../public/js/anime_ch_benzopila.js"></script>
 
 </body>
 </html>

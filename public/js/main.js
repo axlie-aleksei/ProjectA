@@ -117,7 +117,7 @@ if (profileWatch) {
   let currentEpisode = Number(profileWatch.dataset.currentEpisode || 1);
 
   function updateEpisodes() {
-    label.textContent = `Серия ${currentEpisode} из ${totalEpisodes}`;
+    label.textContent = totalEpisodes === 1 ? 'Фильм • 100 минут' : `Серия ${currentEpisode} из ${totalEpisodes}`;
 
     progress.querySelectorAll('.episode-segment').forEach(segment => {
       const episode = Number(segment.dataset.episode);
@@ -155,3 +155,19 @@ if (profileWatch) {
 
   updateEpisodes();
 }
+
+document.querySelectorAll('.ongoing-progress').forEach(progress => {
+  const totalEpisodes = Number(progress.dataset.totalEpisodes || 12);
+  const currentEpisode = Number(progress.dataset.currentEpisode || 1);
+
+  progress.style.setProperty('--episodes-count', totalEpisodes);
+
+  for (let episode = 1; episode <= totalEpisodes; episode += 1) {
+    const segment = document.createElement('span');
+    segment.className = 'episode-segment';
+    segment.title = totalEpisodes === 1 ? 'Фильм' : `Серия ${episode}`;
+    segment.classList.toggle('watched', episode <= currentEpisode);
+    segment.classList.toggle('current', episode === currentEpisode);
+    progress.appendChild(segment);
+  }
+});

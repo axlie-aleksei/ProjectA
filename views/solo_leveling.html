@@ -1,63 +1,77 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Атака Титанов</title>
-<style>
-body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: #000;
-  color: #eee;
-  padding: 20px;
-}
-a { color: #ff005d; text-decoration: none; }
-a:hover { text-decoration: underline; }
-h1 { color: #ff005d; }
-.genres { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
-.genre { background: rgba(255,0,93,0.3); padding: 5px 10px; border-radius: 6px; font-size: 14px; }
-.rating { font-weight: bold; margin-top: 10px; }
-iframe { width: 100%; height: 480px; border-radius: 12px; margin-top: 20px; }
-ul { list-style: none; padding: 0; }
-ul li { background: rgba(27,27,31,0.85); padding: 10px 12px; border-radius: 8px; margin-bottom: 6px; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Поднятие уровня в одиночку</title>
+  <link rel="stylesheet" href="../public/css/style.css">
 </head>
-<body>
+<body class="anime-detail-page">
 
-<a href="index.html">&larr; Назад к списку</a>
+<main class="anime-detail">
+  <a class="back-link" href="index.html">&larr; Назад к списку</a>
 
-<h1>Поднятие уровня в одиночку</h1>
-<img src="https://avatars.mds.yandex.net/get-kinopoisk-image/4486362/ca577875-a331-4ba9-9ba1-d17060612bb3/600x900" alt="Поднятие уровня в одиночку" style="width:300px; float:left; margin-right:20px; border-radius:12px;">
-<p>Десять лет назад по всему миру стали открываться некие «врата», ведущие в подземелья с монстрами, противостоять которым оказалось не под силу даже военным. Однако если успеть вовремя победить босса подземелья, то врата пропадут, не открывшись, и мирные люди не пострадают. Сразиться с боссом способны только избранные – люди, получившие особые силы, чтобы бороться с чудовищами. Таких люди назвали «охотниками». Вот только способности, которые они получают, крайне различны как по функционалу, так и по мощи.</p>
+  <section class="anime-detail-hero">
+    <img class="anime-detail-poster" src="https://cdn.myanimelist.net/images/anime/1801/142390l.jpg" alt="Поднятие уровня в одиночку">
 
-<div class="genres">
-  <div class="genre">Фантастика</div>
-  <div class="genre">Демоны</div>
-  <div class="genre"> Экшен</div>
-  <div class="genre">Сверхъестественное</div>
-</div>
+    <div class="anime-detail-info">
+      <p class="profile-label">Сериал</p>
+      <h1>Поднятие уровня в одиночку</h1>
+      <p>
+        В мире открылись врата в подземелья, а люди с особыми способностями стали охотниками.
+        Сон Джин-у считается слабейшим, но после смертельного рейда получает систему,
+        которая позволяет ему становиться сильнее без ограничений.
+      </p>
 
-<div class="rating">Рейтинг: 9.0/10</div>
+      <div class="genres">
+        <div class="genre">Экшен</div>
+        <div class="genre">Фэнтези</div>
+        <div class="genre">Подземелья</div>
+        <div class="genre">Сверхъестественное</div>
+      </div>
 
-<h2>Трейлер</h2>
-<iframe src="https://www.youtube.com/embed/MZ6xP5c-K9Y" frameborder="0" allowfullscreen></iframe>
+      <div class="rating">Рейтинг: 9.0/10</div>
+    </div>
+  </section>
 
-<h2>Список серий</h2>
-<ul>
-  <li>1 серия: «Я привык к этому» </li>
-  <li>2 серия:«Если бы у меня был еще один шанс»</li>
-  <li>3 серия:«Это как игра»</li>
-  <li>4 серия:«Мне нужно стать сильнее»</li>
-  <li>5 серия:«Довольно хорошая сделка»</li>
-  <li>6 серия:«Настоящая охота начинается»</li>
-  <li>7 серия:«Посмотрим, как далеко я смогу зайти»</li>
-  <li>8 серия:«Это очень расстраивает»</li>
-  <li>9 серия:«Ты скрывал свои навыки»</li>
-  <li>10 серия:«Что это, пикник?»</li>
-  <li>11 серия:«Рыцарь, защищающий пустой трон»</li>
-  <li>12 cерия:«Восстаньте» </li>
-</ul>
+  <section class="anime-detail-section">
+    <h2>Трейлер / плеер</h2>
+    <div class="media-switch" aria-label="Выбор видео">
+      <button class="is-active" type="button" data-media-target="trailer-panel">Трейлер</button>
+      <button type="button" data-media-target="player-panel">Плеер</button>
+    </div>
+
+    <div class="media-panel" id="trailer-panel">
+      <iframe src="https://www.youtube.com/embed/I6JIwjWOhnQ" title="Трейлер Поднятие уровня в одиночку" allowfullscreen></iframe>
+    </div>
+
+    <div class="media-panel" id="player-panel" hidden>
+      <video controls preload="metadata" playsinline data-src="http://localhost:8080/video/4">
+        Ваш браузер не поддерживает встроенный видеоплеер.
+      </video>
+    </div>
+  </section>
+
+  <section class="anime-detail-section">
+    <h2>Список серий</h2>
+    <ul class="episode-list">
+      <li>Серия 1: Я привык к этому</li>
+      <li>Серия 2: Если бы у меня был ещё один шанс</li>
+      <li>Серия 3: Это как игра</li>
+      <li>Серия 4: Мне нужно стать сильнее</li>
+      <li>Серия 5: Довольно хорошая сделка</li>
+      <li>Серия 6: Настоящая охота начинается</li>
+      <li>Серия 7: Посмотрим, как далеко я смогу зайти</li>
+      <li>Серия 8: Это очень расстраивает</li>
+      <li>Серия 9: Ты скрывал свои навыки</li>
+      <li>Серия 10: Что это, пикник?</li>
+      <li>Серия 11: Рыцарь, защищающий пустой трон</li>
+      <li>Серия 12: Восстаньте</li>
+    </ul>
+  </section>
+</main>
+
+<script src="../public/js/anime_ch_benzopila.js"></script>
 
 </body>
 </html>
