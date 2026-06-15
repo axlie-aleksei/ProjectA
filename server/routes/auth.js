@@ -2,12 +2,16 @@ const express = require('express');
 const router = express.Router();
 
 const authController = require('../controllers/authController');
-const authValidator = require("../validator/authValidator");
-// Для регистрации оставляем валидатор (там нужна строгая проверка почты)
+const authValidator = require('../validator/authValidator');
+
+// register needs strict fields
 router.post('/register', authValidator, authController.register);
-// Для логина УБИРАЕМ authValidator, так как туда можно вводить и логин, и email
+
+// login can use username or email
+// because of this we do not use register validator here
 router.post('/login', authController.login);
-// Проверка токена/сессии
+
+// check token for navbar and protected pages
 router.get('/check', authController.checkToken);
 
 module.exports = router;

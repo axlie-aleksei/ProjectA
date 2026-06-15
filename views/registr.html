@@ -5,62 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Регистрация | Anime Stream</title>
   <link rel="stylesheet" href="../public/css/style.css">
+  <script src="../public/js/register.js" defer></script>
 </head>
 <body class="auth-page">
+  <main class="auth-layout">
+    <a class="auth-logo" href="index.html">Anime Stream</a>
 
-<main class="auth-layout">
-  <a class="auth-logo" href="index.html">Anime Stream</a>
-
-  <form id="registerForm" class="auth-card">
-    <h1>Регистрация</h1>
-    <input type="text" name="username" placeholder="Логин" autocomplete="username">
-    <input type="email" name="email" placeholder="Email" autocomplete="email">
-    <input type="password" name="password" placeholder="Пароль" autocomplete="new-password">
-    <button class="submit-btn" type="submit">Зарегистрироваться</button>
-    <a class="auth-link" href="login.html">Уже есть аккаунт</a>
-  </form>
-  <script>
-    // Ждем, пока весь HTML загрузится
-    document.addEventListener("DOMContentLoaded", () => {
-      const form = document.getElementById("registerForm");
-
-      if (!form) {
-        console.error("Форма registerForm не найдена в DOM!");
-        return;
-      }
-
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        console.log("Форма отправляется... Собираем данные..."); // Лог для проверки
-
-        try {
-          const formData = new FormData(e.target);
-          const data = Object.fromEntries(formData);
-          console.log("Данные для отправки:", data); // Посмотрим, что собралось
-
-          const res = await fetch("http://localhost:3000/auth/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-          });
-
-          const result = await res.json();
-          console.log("Ответ от сервера:", result);
-
-          if (res.ok) {
-            alert("Регистрация успешна!");
-            window.location.href = "index2.html";
-          } else {
-            alert("Ошибка: " + (result.error || "Что-то пошло не так"));
-          }
-
-        } catch (error) {
-          console.error("Ошибка при отправке запроса (возможно сервер выключен):", error);
-        }
-      });
-    });
-  </script>
-</main>
-
+    <form class="auth-card" id="registerForm">
+      <h1>Регистрация</h1>
+      <input type="text" name="username" placeholder="Логин" autocomplete="username" required>
+      <input type="email" name="email" placeholder="Email" autocomplete="email" required>
+      <input type="password" name="password" placeholder="Пароль" autocomplete="new-password" required>
+      <button class="submit-btn" type="submit">Зарегистрироваться</button>
+      <a class="auth-link" href="login.html">Уже есть аккаунт</a>
+    </form>
+  </main>
 </body>
 </html>

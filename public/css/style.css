@@ -62,6 +62,10 @@ header h1 {
   text-decoration: none;
 }
 
+.header-actions a[hidden] {
+  display: none;
+}
+
 
 
 nav {

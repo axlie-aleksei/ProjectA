@@ -5,68 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Вход | Anime Stream</title>
   <link rel="stylesheet" href="../public/css/style.css">
+  <script src="../public/js/login.js" defer></script>
 </head>
 <body class="auth-page">
+  <main class="auth-layout">
+    <a class="auth-logo" href="index.html">Anime Stream</a>
 
-<main class="auth-layout">
-  <a class="auth-logo" href="index.html">Anime Stream</a>
-
-  <form class="auth-card" id="loginForm">
-    <h1>Вход</h1>
-    <input type="text" name="identity" placeholder="Логин" autocomplete="username">
-    <input type="password" name="password" placeholder="Пароль" autocomplete="current-password">
-    <button class="submit-btn" type="submit">Войти</button>
-    <a class="auth-link" href="registr.html">Создать аккаунт</a>
-  </form>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // 1. Находим форму в HTML по её ID
-      const form = document.getElementById("loginForm");
-
-      if (!form) {
-        console.error("Ошибка: Форма с id='loginForm' не найдена в HTML!");
-        return;
-      }
-
-      // 2. Вешаем событие на отправку формы
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault(); // Запрещаем стандартную перезагрузку страницы
-        console.log("Пытаемся войти...");
-
-        try {
-          // 3. Автоматически собираем данные из полей инпутов (identity и password)
-          const formData = new FormData(e.target);
-          const data = Object.fromEntries(formData);
-
-          // 4. Отправляем POST-запрос на бэкенд
-          const res = await fetch("http://localhost:3000/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data) // Превращаем данные в JSON-строку
-          });
-
-          const result = await res.json();
-          console.log("Ответ от сервера:", result);
-
-          // 5. Проверяем ответ сервера
-          if (res.ok) {
-            alert(`Добро пожаловать, ${result.username}!`);
-
-            // Перенаправляем пользователя на главную страницу
-            window.location.href = "index2.html";
-          } else {
-            // Выводим ошибку, которую прислал бэкенд ("Неверный логин/email или пароль")
-            alert("Ошибка: " + (result.error || "Не удалось войти"));
-          }
-
-        } catch (error) {
-          console.error("Ошибка при отправке запроса:", error);
-          alert("Не удалось связаться с сервером.");
-        }
-      });
-    });
-  </script>
-</main>
-
+    <form class="auth-card" id="loginForm">
+      <h1>Вход</h1>
+      <input type="text" name="identity" placeholder="Логин" autocomplete="username" required>
+      <input type="password" name="password" placeholder="Пароль" autocomplete="current-password" required>
+      <button class="submit-btn" type="submit">Войти</button>
+      <a class="auth-link" href="registr.html">Создать аккаунт</a>
+    </form>
+  </main>
 </body>
 </html>

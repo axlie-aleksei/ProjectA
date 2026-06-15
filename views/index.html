@@ -25,7 +25,8 @@
     </nav>
 
     <div class="header-actions">
-      <a class="profile-btn" href="profile.html">Профиль</a>
+      <a class="profile-btn" id="profile" href="profile.html" hidden>Профиль</a>
+      <a class="logout-btn" href="login.html" hidden>Выход</a>
       <a class="account-btn" href="login.html">Вход</a>
       <a class="register-btn" href="registr.html">Регистрация</a>
     </div>
@@ -89,29 +90,35 @@
   </div>
 </div>
 
-<div class="section">
+<div class="section" id="continueSection" hidden>
   <h3 class="title">Продолжить просмотр</h3>
-  <div class="row" id="animeRow">
+  <div class="row" id="continueRow">
 
-    <a href="anime_ch_benzopila.html" class="card" data-genre="Экшен" data-year="2025" data-type="Фильм" data-dub="Русский">
+    <a href="anime_ch_benzopila.html" class="card" data-content-id="1" data-genre="Экшен" data-year="2025" data-type="Фильм" data-dub="Русский">
       <img src="https://kinotv.ru/upload/setka-editor/8b4/l5wt82a7e5n26x61dw9qfv1wm84vkqq3.jpg" alt="Человек-бензопила: История Резе">
       <div class="card-info">Человек-бензопила: История Резе</div>
       <button>Продолжить</button>
     </a>
 
-    <a href="anime_attack_titans.html" class="card" data-genre="Драма" data-year="2023" data-type="Сериал" data-dub="Русский">
+    <a href="anime_attack_titans.html" class="card" data-content-id="2" data-genre="Драма" data-year="2023" data-type="Сериал" data-dub="Русский">
       <img src="https://cdn.myanimelist.net/images/anime/10/47347l.jpg" alt="Атака Титанов">
       <div class="card-info">Атака Титанов</div>
       <button>Продолжить</button>
     </a>
 
-    <a href="anime_kaiju8.html" class="card" data-genre="Фэнтези" data-year="2024" data-type="Сериал" data-dub="Субтитры">
+    <a href="my_hero.html" class="card" data-content-id="3" data-genre="Экшен" data-year="2025" data-type="Сериал" data-dub="Русский">
+      <img src="https://cdn.myanimelist.net/images/anime/10/78745l.jpg" alt="Моя геройская академия">
+      <div class="card-info">Моя геройская академия</div>
+      <button>Продолжить</button>
+    </a>
+
+    <a href="anime_kaiju8.html" class="card" data-content-id="4" data-genre="Фэнтези" data-year="2024" data-type="Сериал" data-dub="Субтитры">
       <img src="https://cdn.myanimelist.net/images/anime/1370/140362l.jpg" alt="Кайдзю №8">
       <div class="card-info">Кайдзю №8</div>
       <button>Продолжить</button>
     </a>
 
-    <a href="solo_leveling.html" class="card" data-genre="Экшен" data-year="2022" data-type="Сериал" data-dub="Русский">
+    <a href="solo_leveling.html" class="card" data-content-id="5" data-genre="Экшен" data-year="2022" data-type="Сериал" data-dub="Русский">
       <img src="https://cdn.myanimelist.net/images/anime/1801/142390l.jpg" alt="Поднятие уровня в одиночку">
       <div class="card-info">Поднятие уровня в одиночку</div>
       <button>Продолжить</button>
@@ -122,33 +129,33 @@
 
 <div class="section">
   <h3 class="title">Сейчас смотрят</h3>
-  <div class="row" id="animeRow">
+  <div class="row" id="animeRow2">
 
-    <a href="anime_ch_benzopila.html" class="card" data-genre="Экшен" data-year="2025" data-type="Фильм" data-dub="Русский">
+    <a href="anime_ch_benzopila.html" class="card" data-content-id="1" data-genre="Экшен" data-year="2025" data-type="Фильм" data-dub="Русский">
       <img src="https://kinotv.ru/upload/setka-editor/8b4/l5wt82a7e5n26x61dw9qfv1wm84vkqq3.jpg" alt="Человек-бензопила: История Резе">
       <div class="card-info">Человек-бензопила: История Резе</div>
       <button>Смотреть</button>
     </a>
 
-    <a href="my_hero.html" class="card" data-genre="Экшен" data-year="2025" data-type="Сериал" data-dub="Русский">
+    <a href="my_hero.html" class="card" data-content-id="3" data-genre="Экшен" data-year="2025" data-type="Сериал" data-dub="Русский">
       <img src="https://cdn.myanimelist.net/images/anime/10/78745l.jpg" alt="Моя геройская академия">
       <div class="card-info">Моя геройская академия</div>
       <button>Смотреть</button>
     </a>
 
-    <a href="anime_attack_titans.html" class="card" data-genre="Драма" data-year="2023" data-type="Сериал" data-dub="Русский">
+    <a href="anime_attack_titans.html" class="card" data-content-id="2" data-genre="Драма" data-year="2023" data-type="Сериал" data-dub="Русский">
       <img src="https://cdn.myanimelist.net/images/anime/10/47347l.jpg" alt="Атака Титанов">
       <div class="card-info">Атака Титанов</div>
       <button>Смотреть</button>
     </a>
 
-    <a href="anime_kaiju8.html" class="card" data-genre="Фэнтези" data-year="2024" data-type="Сериал" data-dub="Субтитры">
+    <a href="anime_kaiju8.html" class="card" data-content-id="4" data-genre="Фэнтези" data-year="2024" data-type="Сериал" data-dub="Субтитры">
       <img src="https://cdn.myanimelist.net/images/anime/1370/140362l.jpg" alt="Кайдзю №8">
       <div class="card-info">Кайдзю №8</div>
       <button>Смотреть</button>
     </a>
 
-    <a href="solo_leveling.html" class="card" data-genre="Экшен" data-year="2022" data-type="Сериал" data-dub="Русский">
+    <a href="solo_leveling.html" class="card" data-content-id="5" data-genre="Экшен" data-year="2022" data-type="Сериал" data-dub="Русский">
       <img src="https://cdn.myanimelist.net/images/anime/1801/142390l.jpg" alt="Поднятие уровня в одиночку">
       <div class="card-info">Поднятие уровня в одиночку</div>
       <button>Смотреть</button>
@@ -166,29 +173,12 @@
     <h2>Фильтры поиска</h2>
     <select id="modalGenre">
       <option value="">Жанр</option>
-      <option>Экшен</option>
-      <option>Драма</option>
-      <option>Фэнтези</option>
-      <option>Комедия</option>
-      <option>Романтика</option>
     </select>
     <select id="modalYear">
       <option value="">Год</option>
-      <option>2025</option>
-      <option>2024</option>
-      <option>2023</option>
-      <option>2022</option>
     </select>
     <select id="modalType">
       <option value="">Тип</option>
-      <option>Сериал</option>
-      <option>Фильм</option>
-      <option>OVA</option>
-    </select>
-    <select id="modalDub">
-      <option value="">Дубляж</option>
-      <option>Русский</option>
-      <option>Субтитры</option>
     </select>
     <button class="submit-btn" id="applyFilters">Применить</button>
     <button class="close-btn" id="clearFilters">Сбросить</button>

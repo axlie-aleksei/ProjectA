@@ -2,6 +2,37 @@ const slides = document.querySelectorAll('.slide');
 let currentSlide = 0;
 let slideTimer;
 
+const authToken = localStorage.getItem('authToken');
+const profileBtn = document.querySelector('.profile-btn');
+const logoutBtn = document.querySelector('.logout-btn');
+const accountBtn = document.querySelector('.account-btn');
+const registerBtn = document.querySelector('.register-btn');
+
+function setHidden(element, isHidden) {
+  if (element) element.hidden = isHidden;
+}
+
+if (authToken) {
+  setHidden(profileBtn, false);
+  setHidden(logoutBtn, false);
+  setHidden(accountBtn, true);
+  setHidden(registerBtn, true);
+} else {
+  setHidden(profileBtn, true);
+  setHidden(logoutBtn, true);
+  setHidden(accountBtn, false);
+  setHidden(registerBtn, false);
+}
+
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', event => {
+    event.preventDefault();
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('username');
+    window.location.href = 'login.html';
+  });
+}
+
 function showSlide(index) {
   if (!slides.length) return;
 
@@ -50,7 +81,7 @@ const searchInput = document.getElementById('searchInput');
 const modalGenre = document.getElementById('modalGenre');
 const modalYear = document.getElementById('modalYear');
 const modalType = document.getElementById('modalType');
-const modalDub = document.getElementById('modalDub');
+const continueSection = document.getElementById('continueSection');
 
 if (filterPanel) {
   filterPanel.addEventListener('mouseleave', () => {
@@ -58,40 +89,142 @@ if (filterPanel) {
   });
 }
 
+function fillSelect(select, placeholder, values) {
+  if (!select) return;
+
+  select.innerHTML = `<option value="">${placeholder}</option>`;
+  values.forEach(value => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = value;
+    select.appendChild(option);
+  });
+}
+
+async function loadFilterOptions() {
+  try {
+    const response = await fetch('/content/options');
+    if (!response.ok) return;
+
+    const options = await response.json();
+
+    fillSelect(modalGenre, 'Жанр', options.genres || []);
+    fillSelect(modalYear, 'Год', options.years || []);
+    fillSelect(modalType, 'Тип', options.types || []);
+  } catch (error) {
+    return;
+  }
+}
+
+function getCatalogCards() {
+  return document.querySelectorAll('.section:not(#continueSection) .card');
+}
+
+function hideContinueSection() {
+  if (continueSection) continueSection.hidden = true;
+}
+
+function showContinueCardsByIds(ids) {
+  const contentIds = ids.map(String);
+
+  if (!continueSection || !contentIds.length) {
+    hideContinueSection();
+    return;
+  }
+
+  const watchedIds = new Set(contentIds);
+  let visibleCount = 0;
+
+  // db returns watched anime ids
+  // html has all possible cards already so we leave only matching cards
+  continueSection.querySelectorAll('.card').forEach(card => {
+    const shouldShow = watchedIds.has(card.dataset.contentId);
+    card.style.display = shouldShow ? 'block' : 'none';
+    if (shouldShow) visibleCount += 1;
+  });
+
+  continueSection.hidden = visibleCount === 0;
+}
+
+async function loadContinueWatching() {
+  if (!authToken) {
+    // no token means this page has no user history
+    hideContinueSection();
+    return;
+  }
+
+  try {
+    const response = await fetch('/history/continue', {
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      }
+    });
+
+    if (!response.ok) {
+      hideContinueSection();
+      return;
+    }
+
+    const result = await response.json();
+    showContinueCardsByIds(result.ids || []);
+  } catch (error) {
+    hideContinueSection();
+  }
+}
+
+function showCardsByIds(ids) {
+  const allowedIds = new Set(ids.map(String));
+
+  // db returns only matching anime ids
+  // cards are already in html so we compare data content id with this list
+  getCatalogCards().forEach(card => {
+    card.style.display = allowedIds.has(card.dataset.contentId) ? 'block' : 'none';
+  });
+}
+
+async function applyDatabaseFilters() {
+  try {
+    const params = new URLSearchParams();
+
+    if (modalGenre && modalGenre.value) params.set('genre', modalGenre.value);
+    if (modalYear && modalYear.value) params.set('year', modalYear.value);
+    if (modalType && modalType.value) params.set('type', modalType.value);
+
+    const response = await fetch(`/content?${params.toString()}`);
+    if (!response.ok) return;
+
+    const result = await response.json();
+    showCardsByIds(result.ids || []);
+  } catch (error) {
+    return;
+  }
+}
+
 if (applyFilters) {
   applyFilters.addEventListener('click', () => {
-    const genre = modalGenre.value;
-    const year = modalYear.value;
-    const type = modalType.value;
-    const dub = modalDub.value;
-
-    document.querySelectorAll('.card').forEach(card => {
-      const ok =
-        (!genre || card.dataset.genre === genre) &&
-        (!year || card.dataset.year === year) &&
-        (!type || card.dataset.type === type) &&
-        (!dub || card.dataset.dub === dub);
-      card.style.display = ok ? 'block' : 'none';
-    });
+    applyDatabaseFilters();
   });
 }
 
 if (clearFilters) {
   clearFilters.addEventListener('click', () => {
-    [modalGenre, modalYear, modalType, modalDub].forEach(select => {
+    [modalGenre, modalYear, modalType].forEach(select => {
       if (select) select.value = '';
     });
 
-    document.querySelectorAll('.card').forEach(card => {
+    getCatalogCards().forEach(card => {
       card.style.display = 'block';
     });
   });
 }
 
+loadFilterOptions();
+loadContinueWatching();
+
 if (searchBtn && searchInput) {
   searchBtn.addEventListener('click', () => {
     const q = searchInput.value.toLowerCase();
-    document.querySelectorAll('.card').forEach(card => {
+    getCatalogCards().forEach(card => {
       card.style.display = card.textContent.toLowerCase().includes(q) ? 'block' : 'none';
     });
   });

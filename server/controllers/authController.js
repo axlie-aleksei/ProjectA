@@ -1,63 +1,58 @@
 const authService = require('../services/authService');
 
+const loginErrors = new Set([
+  'User not found',
+  'Incorrect password'
+]);
+
+const registerErrors = new Set([
+  'Fill all fields',
+  'User already exists'
+]);
+
 module.exports = {
-  // 1. РЕГИСТРАЦИЯ
   async register(req, res) {
     try {
       const user = await authService.register(req.body);
-      res.status(201).json({ message: 'User created', user });
-    } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(201).json({ user });
+    } catch (error) {
+      if (registerErrors.has(error.message)) {
+        return res.status(400).json({ error: error.message });
+      }
+
+      if (error.message === 'Database is unavailable') {
+        return res.status(503).json({ error: error.message });
+      }
+
+      console.error('Error server register:', error);
+      return res.status(500).json({ error: 'Error server register' });
     }
   },
 
-  // 2. ВХОД (ЛОГИН)
   async login(req, res) {
-    console.log("\n============================================");
-    console.log("=== [БЭКЕНД] КТО-ТО ПЫТАЕТСЯ ВОЙТИ ===");
-    console.log("Данные из формы (req.body):", req.body);
-    console.log("============================================");
-
     const { identity, password } = req.body;
 
-    // Проверка на пустые поля
     if (!identity || !password) {
-      console.log("❌ Ошибка: Фронтенд прислал пустые поля!");
-      return res.status(400).json({ error: "Заполните все поля" });
+      return res.status(400).json({ error: 'Fill all fields' });
     }
 
     try {
-      console.log(`[КОНТРОЛЛЕР]: Передаем данные в authService для: "${identity}"`);
+      const { token, username } = await authService.login(identity, password);
 
-      // Вызываем исправленный метод login из authService
-      // Он сам сходит в БД через db.query, проверит bcrypt и создаст JWT-токен
-      const result = await authService.login(identity, password);
-
-      // result содержит { token, username }, которые вернул сервис
-      console.log(`✅ УСПЕХ: Пользователь ${result.username} успешно авторизован!`);
-
-      // Отправляем токен и юзернейм обратно на фронтенд
       return res.status(200).json({
-        message: "Вход выполнен успешно",
-        token: result.token,
-        username: result.username
+        token,
+        username
       });
-
     } catch (error) {
-      console.log("❌ Ошибка при авторизации:", error.message);
-
-      // Если сервис выбросил понятную ошибку, отдаем её клиенту
-      if (error.message === 'Пользователь не найден' || error.message === 'Неверный пароль') {
-        return res.status(400).json({ error: "Неверный логин/email или пароль" });
+      if (loginErrors.has(error.message)) {
+        return res.status(400).json({ error: 'Incorrect login or password' });
       }
 
-      // На случай непредвиденных падений (например, если БД отключилась)
-      console.error("💥 КРИТИЧЕСКАЯ ОШИБКА НА БЭКЕНДЕ:", error);
-      return res.status(500).json({ error: "Ошибка сервера при авторизации" });
+      console.error('Error server auth:', error);
+      return res.status(500).json({ error: 'Error server auth' });
     }
   },
 
-  // 3. ПРОВЕРКА ТОКЕНА
   async checkToken(req, res) {
     try {
       const user = await authService.verifyToken(req.headers.authorization);
