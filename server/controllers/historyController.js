@@ -4,8 +4,8 @@ const historyService = require('../services/historyService');
 module.exports = {
   async getProgress(req, res) {
     try {
-      // token tells us which user owns saved time
-      // query tells us which anime page asks for time
+      // token decides who owns saved time
+      // query only chooses anime and episode
       const user = await authService.verifyToken(req.headers.authorization);
       const item = await historyService.getWatchProgress(user.id, req.query);
 
@@ -34,8 +34,8 @@ module.exports = {
 
   async saveProgress(req, res) {
     try {
-      // token tells us which user watched it
-      // body tells us which anime and episode started
+      // never trust user id from body
+      // token is the only source of current user
       const user = await authService.verifyToken(req.headers.authorization);
       const item = await historyService.saveWatchProgress(user.id, req.body);
 
@@ -64,8 +64,8 @@ module.exports = {
 
   async continueWatching(req, res) {
     try {
-      // token gives us user id
-      // after that db decides what this user watched
+      // continue list is based on this user only
+      // db filters empty progress rows
       const user = await authService.verifyToken(req.headers.authorization);
       const ids = await historyService.getContinueContentIds(user.id);
 

@@ -1,8 +1,12 @@
 (function () {
   const mediaButtons = document.querySelectorAll('[data-media-target]');
   const mediaPanels = document.querySelectorAll('.media-panel');
-  const loadedProgressVideos = new WeakSet();
-  const lastSavedSeconds = new WeakMap();
+
+  // one video element can change episode
+  // key keeps saved time separated by episode
+  const loadedProgressKeys = new Set();
+  const lastSavedSeconds = new Map();
+  const switchingEpisodeVideos = new WeakSet();
 
   function prepareVideo(video) {
     if (!video) return;
@@ -22,8 +26,13 @@
   function getVideoData(video) {
     return {
       contentId: video.dataset.contentId,
-      episodeNumber: video.dataset.episodeNumber || 1
+      episodeNumber: video.dataset.episodeNumber || '1'
     };
+  }
+
+  function getVideoKey(video) {
+    const data = getVideoData(video);
+    return `${data.contentId}:${data.episodeNumber}`;
   }
 
   function getProgressSeconds(video) {
@@ -32,6 +41,7 @@
   }
 
   function setVideoTime(video, seconds) {
+    // metadata is needed before browser accepts safe current time
     const setTime = () => {
       if (Number.isFinite(video.duration) && video.duration > 1) {
         video.currentTime = Math.min(seconds, video.duration - 1);
@@ -67,12 +77,21 @@
   async function loadSavedProgress(video) {
     const token = getAuthToken();
     const videoData = getVideoData(video);
+    const videoKey = getVideoKey(video);
 
-    if (!token || !videoData.contentId || loadedProgressVideos.has(video)) {
+    // player button only reads saved time
+    // it never writes zero progress to db
+    if (!token || !videoData.contentId) {
       return 0;
     }
 
-    loadedProgressVideos.add(video);
+    if (loadedProgressKeys.has(videoKey)) {
+      const savedSeconds = lastSavedSeconds.get(videoKey) || 0;
+      setVideoTime(video, savedSeconds);
+      return savedSeconds;
+    }
+
+    loadedProgressKeys.add(videoKey);
 
     try {
       const params = new URLSearchParams(videoData);
@@ -89,33 +108,39 @@
 
       if (Number.isFinite(progressSeconds) && progressSeconds > 0) {
         setVideoTime(video, progressSeconds);
-        lastSavedSeconds.set(video, Math.floor(progressSeconds));
+        lastSavedSeconds.set(videoKey, Math.floor(progressSeconds));
         return progressSeconds;
       }
     } catch (error) {
       return 0;
     }
 
+    setVideoTime(video, 0);
     return 0;
   }
 
   async function saveWatchProgress(video, options = {}) {
     const token = getAuthToken();
     const videoData = getVideoData(video);
+    const videoKey = getVideoKey(video);
 
     if (!token || !videoData.contentId) return;
 
     const progressSeconds = getProgressSeconds(video);
-    const lastSecond = lastSavedSeconds.get(video);
+    if (progressSeconds < 1) return;
 
+    const lastSecond = lastSavedSeconds.get(videoKey);
+
+    // timeupdate fires a lot
+    // save only when time moved enough to keep db cleaner
     if (options.force && lastSecond === progressSeconds) return;
     if (!options.force && lastSecond !== undefined && Math.abs(progressSeconds - lastSecond) < 10) return;
 
-    lastSavedSeconds.set(video, progressSeconds);
+    lastSavedSeconds.set(videoKey, progressSeconds);
 
     try {
-      // video knows anime id from html
-      // server updates one db row for this user and episode
+      // video knows anime id and episode number from html
+      // server updates one db row for this user episode
       await fetch('/history/progress', {
         method: 'POST',
         headers: {
@@ -134,20 +159,61 @@
     }
   }
 
-  async function prepareHistory(video) {
-    const progressSeconds = await loadSavedProgress(video);
-
-    if (progressSeconds === 0) {
-      // opening player means user started watching
-      // this makes continue block appear without extra db rows
-      saveWatchProgress(video, { force: true });
-    }
-  }
-
   function preparePanelHistory(panel) {
     panel.querySelectorAll('video[data-content-id]').forEach(video => {
-      prepareHistory(video);
+      loadSavedProgress(video);
     });
+  }
+
+  function setEpisode(video, episodeNumber) {
+    // save old episode before we change episode number on video
+    saveWatchProgress(video, { force: true });
+
+    // pause fires during episode change
+    // this flag stops saving old time into new episode
+    switchingEpisodeVideos.add(video);
+    video.pause();
+    video.dataset.episodeNumber = String(episodeNumber);
+    setVideoTime(video, 0);
+    loadSavedProgress(video);
+
+    setTimeout(() => {
+      switchingEpisodeVideos.delete(video);
+    }, 0);
+  }
+
+  function buildEpisodePicker(video) {
+    const totalEpisodes = Number(video.dataset.totalEpisodes || 1);
+    const section = video.closest('.anime-detail-section');
+    const picker = section && section.querySelector('[data-episode-picker]');
+
+    // films do not need episode buttons
+    // series creates buttons from html episode count
+    if (!picker || totalEpisodes < 2) return;
+
+    picker.textContent = '';
+
+    for (let episode = 1; episode <= totalEpisodes; episode += 1) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'episode-choice';
+      button.textContent = `Серия ${episode}`;
+      button.dataset.episodeNumber = String(episode);
+
+      if (episode === Number(video.dataset.episodeNumber || 1)) {
+        button.classList.add('is-active');
+      }
+
+      button.addEventListener('click', () => {
+        picker.querySelectorAll('.episode-choice').forEach(item => {
+          item.classList.toggle('is-active', item === button);
+        });
+
+        setEpisode(video, episode);
+      });
+
+      picker.appendChild(button);
+    }
   }
 
   mediaButtons.forEach((button) => {
@@ -173,6 +239,8 @@
   });
 
   document.querySelectorAll('video').forEach(video => {
+    buildEpisodePicker(video);
+
     video.addEventListener('play', async () => {
       prepareVideo(video);
       await loadSavedProgress(video);
@@ -184,6 +252,7 @@
     });
 
     video.addEventListener('pause', () => {
+      if (switchingEpisodeVideos.has(video)) return;
       saveWatchProgress(video, { force: true });
     });
 

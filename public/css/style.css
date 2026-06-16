@@ -555,7 +555,7 @@ footer {
 
 .profile-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   margin: 18px 0;
 }
@@ -611,6 +611,11 @@ footer {
   gap: 18px;
 }
 
+.profile-watch-list {
+  display: grid;
+  gap: 16px;
+}
+
 .profile-watch-info {
   min-width: 0;
 }
@@ -631,6 +636,22 @@ footer {
 .profile-watch p {
   margin: 0 0 12px;
   color: #aaa;
+}
+
+.watch-progress {
+  width: 100%;
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+}
+
+.watch-progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent-secondary);
+  box-shadow: 0 0 10px rgba(0,170,255,0.45);
 }
 
 .episode-progress {
@@ -692,40 +713,6 @@ footer {
 
 .episode-btn.primary:hover {
   background: var(--accent-hover);
-}
-
-.profile-favorites {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-
-.profile-favorites a {
-  overflow: hidden;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: #fff;
-  text-decoration: none;
-  transition: 0.3s;
-}
-
-.profile-favorites a:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 0 14px var(--accent-primary);
-}
-
-.profile-favorites img {
-  width: 100%;
-  height: 260px;
-  display: block;
-  object-fit: cover;
-  object-position: center top;
-}
-
-.profile-favorites span {
-  display: block;
-  padding: 12px;
 }
 
 .catalog-page {
@@ -962,6 +949,29 @@ footer {
   display: none;
 }
 
+.episode-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.episode-choice {
+  min-width: 84px;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.episode-choice:hover,
+.episode-choice.is-active {
+  background: var(--accent-primary);
+}
+
 .movie-list {
   list-style: none;
   padding: 0;
@@ -993,7 +1003,6 @@ footer {
   }
 
   .profile-stats,
-  .profile-favorites,
   .ongoing-grid {
     grid-template-columns: 1fr;
   }

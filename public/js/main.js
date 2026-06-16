@@ -92,7 +92,13 @@ if (filterPanel) {
 function fillSelect(select, placeholder, values) {
   if (!select) return;
 
-  select.innerHTML = `<option value="">${placeholder}</option>`;
+  select.textContent = '';
+
+  const placeholderOption = document.createElement('option');
+  placeholderOption.value = '';
+  placeholderOption.textContent = placeholder;
+  select.appendChild(placeholderOption);
+
   values.forEach(value => {
     const option = document.createElement('option');
     option.value = value;
@@ -117,6 +123,7 @@ async function loadFilterOptions() {
 }
 
 function getCatalogCards() {
+  // filters should not touch continue watching section
   return document.querySelectorAll('.section:not(#continueSection) .card');
 }
 
@@ -147,7 +154,7 @@ function showContinueCardsByIds(ids) {
 }
 
 async function loadContinueWatching() {
-  if (!authToken) {
+  if (!continueSection || !authToken) {
     // no token means this page has no user history
     hideContinueSection();
     return;
@@ -186,6 +193,8 @@ async function applyDatabaseFilters() {
   try {
     const params = new URLSearchParams();
 
+    // page sends selected filters
+    // server answers only with anime ids from db
     if (modalGenre && modalGenre.value) params.set('genre', modalGenre.value);
     if (modalYear && modalYear.value) params.set('year', modalYear.value);
     if (modalType && modalType.value) params.set('type', modalType.value);
@@ -218,8 +227,13 @@ if (clearFilters) {
   });
 }
 
-loadFilterOptions();
-loadContinueWatching();
+if (modalGenre || modalYear || modalType) {
+  loadFilterOptions();
+}
+
+if (continueSection) {
+  loadContinueWatching();
+}
 
 if (searchBtn && searchInput) {
   searchBtn.addEventListener('click', () => {

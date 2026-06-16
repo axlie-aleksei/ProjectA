@@ -8,7 +8,7 @@ if (loginForm) {
     const data = Object.fromEntries(formData);
 
     try {
-      const response = await fetch('http://localhost:3000/auth/login', {
+      const response = await fetch('/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -24,10 +24,8 @@ if (loginForm) {
       localStorage.setItem('authToken', result.token);
       localStorage.setItem('username', result.username);
 
-      alert(`Добро пожаловать, ${result.username}!`);
       window.location.href = 'index.html';
     } catch (error) {
-      console.error('Login request failed:', error);
       alert('Не удалось связаться с сервером.');
     }
   });

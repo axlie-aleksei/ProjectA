@@ -8,7 +8,7 @@ if (registerForm) {
     const data = Object.fromEntries(formData);
 
     try {
-      const response = await fetch('http://localhost:3000/auth/register', {
+      const response = await fetch('/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -21,10 +21,8 @@ if (registerForm) {
         return;
       }
 
-      alert('Регистрация успешна!');
       window.location.href = 'login.html';
     } catch (error) {
-      console.error('Register request failed:', error);
       alert('Не удалось связаться с сервером.');
     }
   });

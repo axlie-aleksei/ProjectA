@@ -1,23 +1,41 @@
 const path = require('path');
 const express = require('express');
 
-function staticFiles(app) {
-  // files from public go through this path
-  app.use('/public', express.static(path.join(__dirname, '..', '..', 'public')));
+const viewsDir = path.join(__dirname, '..', '..', 'views');
+const pages = new Set([
+  '404.html',
+  'anime_attack_titans.html',
+  'anime_ch_benzopila.html',
+  'anime_kaiju8.html',
+  'index.html',
+  'login.html',
+  'my_hero.html',
+  'ongoings.html',
+  'profile.html',
+  'registr.html',
+  'solo_leveling.html'
+]);
 
-  // main page for root url
+function staticFiles(app) {
+  // public files are mounted on one url
+  // root folders stay closed for browser
+  app.use('/public', express.static(path.join(__dirname, '..', '..', 'public'), {
+    dotfiles: 'ignore',
+    index: false
+  }));
+
   app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', '..', 'views', 'index.html'));
+    res.sendFile(path.join(viewsDir, 'index.html'));
   });
 
-  // only html pages from views can be opened here
+  // only known html pages can be opened here
+  // random file names should not reach sendfile
   app.get('/:page', (req, res) => {
     const page = req.params.page;
 
-    // this keeps other random paths from being used as files
-    if (!page.endsWith('.html')) return res.status(404).send('Page not found');
+    if (!pages.has(page)) return res.status(404).send('Page not found');
 
-    const filePath = path.join(__dirname, '..', '..', 'views', page);
+    const filePath = path.join(viewsDir, page);
     res.sendFile(filePath, (err) => {
       if (err) res.status(404).send('Page not found');
     });

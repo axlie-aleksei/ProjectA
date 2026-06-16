@@ -32,7 +32,12 @@ module.exports = {
   async login(req, res) {
     const { identity, password } = req.body;
 
-    if (!identity || !password) {
+    if (
+      typeof identity !== 'string' ||
+      typeof password !== 'string' ||
+      !identity.trim() ||
+      !password
+    ) {
       return res.status(400).json({ error: 'Fill all fields' });
     }
 

@@ -11,6 +11,7 @@ module.exports = {
         FROM watch_history wh
         JOIN episodes e ON e.id = wh.episode_id
         WHERE wh.user_id = ?
+          AND wh.progress_seconds > 0
         GROUP BY e.content_id
         ORDER BY MAX(wh.updated_at) DESC
       `,
@@ -41,6 +42,17 @@ module.exports = {
 
     if (!content.length) {
       throw new Error('Invalid content');
+    }
+
+    // zero progress is not useful history
+    // it also stops old player clicks from wiping saved time
+    if (progressSeconds < 1) {
+      return {
+        saved: false,
+        contentId,
+        episodeNumber,
+        progressSeconds: 0
+      };
     }
 
     // first we make sure this anime has episode row
@@ -84,6 +96,7 @@ module.exports = {
 
     return {
       id: result.insertId || null,
+      saved: true,
       contentId,
       episodeId,
       episodeNumber,

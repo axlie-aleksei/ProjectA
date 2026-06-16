@@ -1,5 +1,15 @@
 const db = require('../db');
 
+function cleanText(value) {
+  // filters come from query string
+  // keep them short before they go near sql
+  if (value === undefined || value === null || value === '') return '';
+  if (typeof value !== 'string') throw new Error('Invalid filters');
+  if (value.length > 60) throw new Error('Invalid filters');
+
+  return value.trim();
+}
+
 module.exports = {
   async getFilterOptions() {
     const [genres] = await db.query('SELECT name FROM genres ORDER BY name');
@@ -18,22 +28,31 @@ module.exports = {
   async getFilteredContentIds(filters) {
     const values = [];
     const where = [];
+    const genre = cleanText(filters.genre);
+    const type = cleanText(filters.type);
+    const year = cleanText(filters.year);
 
     // build where only from selected filters
     // user values stay in values so we do not paste text into sql
-    if (filters.genre) {
+    if (genre) {
       where.push('g.name = ?');
-      values.push(filters.genre);
+      values.push(genre);
     }
 
-    if (filters.year) {
+    if (year) {
+      const yearNumber = Number(year);
+      // year is number only so random text cannot become sql condition
+      if (!Number.isInteger(yearNumber) || yearNumber < 1900 || yearNumber > 2100) {
+        throw new Error('Invalid filters');
+      }
+
       where.push('mc.release_year = ?');
-      values.push(Number(filters.year));
+      values.push(yearNumber);
     }
 
-    if (filters.type) {
+    if (type) {
       where.push('t.name = ?');
-      values.push(filters.type);
+      values.push(type);
     }
 
     const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
