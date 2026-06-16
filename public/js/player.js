@@ -26,13 +26,14 @@
   function getVideoData(video) {
     return {
       contentId: video.dataset.contentId,
+      episodeId: video.dataset.episodeId || '',
       episodeNumber: video.dataset.episodeNumber || '1'
     };
   }
 
   function getVideoKey(video) {
     const data = getVideoData(video);
-    return `${data.contentId}:${data.episodeNumber}`;
+    return `${data.contentId}:${data.episodeId || data.episodeNumber}`;
   }
 
   function getProgressSeconds(video) {
@@ -149,6 +150,7 @@
         },
         body: JSON.stringify({
           contentId: videoData.contentId,
+          episodeId: videoData.episodeId,
           episodeNumber: videoData.episodeNumber,
           progressSeconds
         }),
@@ -165,7 +167,12 @@
     });
   }
 
-  function setEpisode(video, episodeNumber) {
+  function setEpisode(video, episode) {
+    const episodeData = typeof episode === 'number'
+      ? { episodeId: '', episodeNumber: episode }
+      : episode;
+    const videoId = Number(episodeData.videoId || 0);
+
     // save old episode before we change episode number on video
     saveWatchProgress(video, { force: true });
 
@@ -173,7 +180,13 @@
     // this flag stops saving old time into new episode
     switchingEpisodeVideos.add(video);
     video.pause();
-    video.dataset.episodeNumber = String(episodeNumber);
+    video.dataset.episodeId = String(episodeData.episodeId || '');
+    video.dataset.episodeNumber = String(episodeData.episodeNumber);
+    if (Number.isInteger(videoId) && videoId > 0) {
+      video.dataset.src = `/video/${videoId}`;
+      video.src = video.dataset.src;
+      video.load();
+    }
     setVideoTime(video, 0);
     loadSavedProgress(video);
 
@@ -216,6 +229,100 @@
     }
   }
 
+  async function loadEpisodes(video) {
+    const totalEpisodes = Number(video.dataset.totalEpisodes || 1);
+    const contentId = video.dataset.contentId;
+
+    if (!contentId || totalEpisodes < 2) {
+      return [];
+    }
+
+    try {
+      const params = new URLSearchParams({ total: String(totalEpisodes) });
+      const response = await fetch(`/content/${contentId}/episodes?${params.toString()}`);
+
+      if (!response.ok) return [];
+
+      const result = await response.json();
+      return result.episodes || [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function getFallbackEpisodes(video) {
+    const totalEpisodes = Number(video.dataset.totalEpisodes || 1);
+    const videoStartId = Number(video.dataset.videoStartId || 0);
+    const episodes = [];
+
+    for (let episode = 1; episode <= totalEpisodes; episode += 1) {
+      episodes.push({
+        episodeId: '',
+        episodeNumber: episode,
+        videoId: videoStartId ? videoStartId + episode - 1 : ''
+      });
+    }
+
+    return episodes;
+  }
+
+  function addFallbackVideoIds(video, episodes) {
+    const videoStartId = Number(video.dataset.videoStartId || 0);
+
+    if (!videoStartId) {
+      return episodes;
+    }
+
+    return episodes.map(episode => ({
+      ...episode,
+      videoId: episode.videoId || videoStartId + Number(episode.episodeNumber) - 1
+    }));
+  }
+
+  async function buildEpisodePickerWithIds(video) {
+    const totalEpisodes = Number(video.dataset.totalEpisodes || 1);
+    const section = video.closest('.anime-detail-section');
+    const picker = section && section.querySelector('[data-episode-picker]');
+
+    // films do not need episode buttons
+    // series creates buttons from html episode count
+    if (!picker || totalEpisodes < 2) return;
+
+    picker.textContent = '';
+
+    const episodes = await loadEpisodes(video);
+    const pickerEpisodes = episodes.length ? addFallbackVideoIds(video, episodes) : getFallbackEpisodes(video);
+
+    pickerEpisodes.forEach(episode => {
+      const episodeNumber = Number(episode.episodeNumber);
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'episode-choice';
+      button.textContent = `Серия ${episodeNumber}`;
+      button.dataset.episodeId = String(episode.episodeId || '');
+      button.dataset.episodeNumber = String(episodeNumber);
+      button.dataset.videoId = String(episode.videoId || '');
+
+      if (episodeNumber === Number(video.dataset.episodeNumber || 1)) {
+        button.classList.add('is-active');
+        video.dataset.episodeId = String(episode.episodeId || '');
+        if (episode.videoId) {
+          video.dataset.src = `/video/${episode.videoId}`;
+        }
+      }
+
+      button.addEventListener('click', () => {
+        picker.querySelectorAll('.episode-choice').forEach(item => {
+          item.classList.toggle('is-active', item === button);
+        });
+
+        setEpisode(video, episode);
+      });
+
+      picker.appendChild(button);
+    });
+  }
+
   mediaButtons.forEach((button) => {
     button.addEventListener('click', () => {
       const targetId = button.dataset.mediaTarget;
@@ -239,7 +346,7 @@
   });
 
   document.querySelectorAll('video').forEach(video => {
-    buildEpisodePicker(video);
+    buildEpisodePickerWithIds(video);
 
     video.addEventListener('play', async () => {
       prepareVideo(video);

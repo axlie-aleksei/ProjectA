@@ -179,19 +179,33 @@ async function loadContinueWatching() {
   }
 }
 
-function showCardsByIds(ids) {
+function cardMatchesSearch(card, search, dbMatchedIds) {
+  if (!search) return true;
+
+  const cardId = String(card.dataset.contentId);
+  const visibleText = card.textContent.toLowerCase();
+
+  // search checks db ids and card text
+  return dbMatchedIds.has(cardId) || visibleText.includes(search.toLowerCase());
+}
+
+function showCardsByIds(ids, search = '', matchedIds = []) {
   const allowedIds = new Set(ids.map(String));
+  const dbMatchedIds = new Set(matchedIds.map(String));
 
   // db returns only matching anime ids
   // cards are already in html so we compare data content id with this list
   getCatalogCards().forEach(card => {
-    card.style.display = allowedIds.has(card.dataset.contentId) ? 'block' : 'none';
+    const isAllowed = allowedIds.has(card.dataset.contentId);
+    const isSearchMatch = cardMatchesSearch(card, search, dbMatchedIds);
+    card.style.display = isAllowed && isSearchMatch ? 'block' : 'none';
   });
 }
 
 async function applyDatabaseFilters() {
   try {
     const params = new URLSearchParams();
+    const search = searchInput ? searchInput.value.trim() : '';
 
     // page sends selected filters
     // server answers only with anime ids from db
@@ -203,7 +217,21 @@ async function applyDatabaseFilters() {
     if (!response.ok) return;
 
     const result = await response.json();
-    showCardsByIds(result.ids || []);
+    let matchedIds = [];
+
+    if (search) {
+      // search keeps selected filters
+      const searchParams = new URLSearchParams(params);
+      searchParams.set('q', search);
+
+      const searchResponse = await fetch(`/content?${searchParams.toString()}`);
+      if (searchResponse.ok) {
+        const searchResult = await searchResponse.json();
+        matchedIds = searchResult.ids || [];
+      }
+    }
+
+    showCardsByIds(result.ids || [], search, matchedIds);
   } catch (error) {
     return;
   }
@@ -221,6 +249,8 @@ if (clearFilters) {
       if (select) select.value = '';
     });
 
+    if (searchInput) searchInput.value = '';
+
     getCatalogCards().forEach(card => {
       card.style.display = 'block';
     });
@@ -237,10 +267,13 @@ if (continueSection) {
 
 if (searchBtn && searchInput) {
   searchBtn.addEventListener('click', () => {
-    const q = searchInput.value.toLowerCase();
-    getCatalogCards().forEach(card => {
-      card.style.display = card.textContent.toLowerCase().includes(q) ? 'block' : 'none';
-    });
+    applyDatabaseFilters();
+  });
+
+  searchInput.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+      applyDatabaseFilters();
+    }
   });
 }
 

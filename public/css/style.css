@@ -16,11 +16,13 @@ header {
   position: fixed;
   top: 0;
   width: 100%;
+  box-sizing: border-box;
   z-index: 1000;
 
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  justify-content: space-between;
+  min-height: 62px;
 
   padding: 0 30px;
 
@@ -35,25 +37,28 @@ header {
 header h1 {
   color: var(--accent-primary);
   font-weight: bold;
-  margin: 10px 20px;
-
+  margin: 0 20px;
+  line-height: 1;
 }
 
 .header-center {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
   align-items: center;
   gap: 40px;
 
-  position: relative;
-  top: -4px;
+  margin-left: 24px;
+  margin-right: 24px;
+}
 
-  margin-left: 60px;
+.header-search {
+  justify-self: center;
 }
 
 .header-actions {
   display: flex;
+  align-items: center;
   gap: 10px;
-  transform: translateX(-24px);
 }
 
 .header-actions a {
@@ -70,12 +75,14 @@ header h1 {
 
 nav {
   display: flex;
+  align-items: center;
   gap: 18px;
 }
 
 nav a {
   color: #ccc;
   text-decoration: none;
+  line-height: 1;
   transition: 0.3s;
 }
 

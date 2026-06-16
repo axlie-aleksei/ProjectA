@@ -22,7 +22,8 @@ module.exports = {
 
       if (
         error.message === 'Invalid content' ||
-        error.message === 'Invalid episode'
+        error.message === 'Invalid episode' ||
+        error.message === 'Episode not found'
       ) {
         return res.status(400).json({ error: error.message });
       }
@@ -52,7 +53,8 @@ module.exports = {
 
       if (
         error.message === 'Invalid content' ||
-        error.message === 'Invalid episode'
+        error.message === 'Invalid episode' ||
+        error.message === 'Episode not found'
       ) {
         return res.status(400).json({ error: error.message });
       }

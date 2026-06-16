@@ -23,5 +23,19 @@ module.exports = {
       console.error('Error loading content:', error);
       res.status(500).json({ error: 'Could not load content' });
     }
+  },
+
+  async episodes(req, res) {
+    try {
+      const episodes = await contentService.getEpisodes(req.params.id, req.query.total);
+      res.json({ episodes });
+    } catch (error) {
+      if (error.message === 'Invalid content' || error.message === 'Invalid episode') {
+        return res.status(400).json({ error: error.message });
+      }
+
+      console.error('Error loading episodes:', error);
+      res.status(500).json({ error: 'Could not load episodes' });
+    }
   }
 };
